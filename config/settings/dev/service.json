@@ -1,0 +1,23 @@
+{
+    "port": 8080,
+    "environment": "DEVELOPMENT",
+    "timeout": "10s",
+    "cache_ttl": "3s",
+    "output_encoding": "json",
+    "plugin": {
+        "pattern": ".so",
+        "folder": "./tdei-plugin/"
+    },
+    "extra_config": {
+        "plugin/http-server": {
+            "name": [
+                "tdei-api-gateway"
+            ],
+            "tdei-api-gateway": {
+                "api_key_header": "x-api-key",
+                "auth_server": "https://tdei-auth-n-z-dev.azurewebsites.net",
+                "api_doc_url": ""
+            }
+        }
+    }
+}
