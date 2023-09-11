@@ -15,8 +15,7 @@
             ],
             "tdei-api-gateway": {
                 "api_key_header": "x-api-key",
-                "auth_server": "https://tdei-auth-n-z-dev.azurewebsites.net",
-                "api_doc_url": ""
+                "auth_server": "https://tdei-auth-n-z-dev.azurewebsites.net"
             }
         }
     }
