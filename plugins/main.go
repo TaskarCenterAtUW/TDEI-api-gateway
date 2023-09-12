@@ -36,6 +36,15 @@ func (registerer) RegisterLogger(v interface{}) {
 	common.TDEILogger.Debug(fmt.Sprintf("[PLUGIN: %s] Logger loaded", HandlerRegisterer))
 }
 
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
+
 func (r registerer) registerHandlers(_ context.Context, extra map[string]interface{}, h http.Handler) (http.Handler, error) {
 	// //The config variable contains all the keys you have defined in the configuration
 	// if the key doesn't exists or is not a map the plugin returns an error and the default handler
@@ -47,6 +56,8 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 	// The plugin will look for this path:
 	apiKeyHeader, _ := config["api_key_header"].(string)
 	authServer, _ := config["auth_server"].(string)
+	passThroughUrlsConfig, _ := config["pass-through-urls"].(string)
+	passThroughUrls := strings.Split(passThroughUrlsConfig, ",")
 	common.TDEILogger.Debug(fmt.Sprintf("TDEI plugin is now configured with HTTP middleware %s", apiKeyHeader))
 
 	// return the actual handler wrapping or your custom logic so it can be used as a replacement for the default http handler
@@ -57,6 +68,11 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 
 		common.TDEILogger.Debug("Entered HTTP handler")
 		fmt.Println("Entered HTTP handler")
+
+		if stringInSlice(req.URL.Path, passThroughUrls) {
+			h.ServeHTTP(w, req)
+			return
+		}
 
 		if len(authorizationToken) != 0 {
 			accessToken, err := extractBearerToken(authorizationToken)

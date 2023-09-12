@@ -12,9 +12,14 @@
     {
         "endpoint": "{{ $endpoint.endpoint }}",
         "method": "{{ $endpoint.http_method }}",
+        "output_encoding": "no-op",
+        "input_headers": [
+        "*"
+        ],
         "backend": [
             {
               "url_pattern": "{{ $endpoint.backend_url_pattern }}",
+              "encoding": "no-op",
               "method": "{{ $endpoint.http_method }}",
               "host": [
                 "{{ $endpoint.backend_host }}"
