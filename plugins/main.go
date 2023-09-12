@@ -56,16 +56,19 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 		apiKey := req.Header.Get(apiKeyHeader)
 
 		common.TDEILogger.Debug("Entered HTTP handler")
+		fmt.Println("Entered HTTP handler")
 
 		if len(authorizationToken) != 0 {
 			accessToken, err := extractBearerToken(authorizationToken)
 			if err != nil {
 				common.TDEILogger.Error("Invalid access token format", err)
+				fmt.Println("Invalid access token format", err)
 				http.Error(w, "Invalid access token format", http.StatusForbidden)
 				return
 			}
 
 			common.TDEILogger.Debug("Validating Access Token")
+			fmt.Println("Validating Access Token")
 			bodyReader := bytes.NewBufferString(accessToken)
 
 			requestURL := fmt.Sprintf("%s%s", authServer, "/api/v1/validateAccessToken")
@@ -73,6 +76,7 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			newReq.Header.Set("Content-Type", "text/plain")
 			if err != nil {
 				common.TDEILogger.Error("Error creating the validateAccessToken request with auth service:", err)
+				fmt.Println("Error creating the validateAccessToken request with auth service:", err)
 				http.Error(w, "Error creating the validateAccessToken request with auth service", http.StatusInternalServerError)
 				return
 			}
@@ -84,18 +88,22 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			res, err := client.Do(newReq)
 			if err != nil {
 				common.TDEILogger.Error("Error validating the access token request with auth service", err)
+				fmt.Println("Error validating the access token request with auth service", err)
 				http.Error(w, "Error validating the access token request with auth service", http.StatusInternalServerError)
 				return
 			} else if res.StatusCode != http.StatusOK {
 				common.TDEILogger.Error("Unauthorized request", res)
+				fmt.Println("Unauthorized request", res)
 				http.Error(w, "Unauthorized request", http.StatusForbidden)
 				return
 			}
 
+			fmt.Println("Authentication successful")
 			h.ServeHTTP(w, req)
 			return
 		} else if len(apiKey) != 0 {
 			common.TDEILogger.Debug("Validating API Key")
+			fmt.Println("Validating API Key")
 			bodyReader := bytes.NewBufferString(apiKey)
 
 			requestURL := fmt.Sprintf("%s%s", authServer, "/api/v1/validateApiKey")
@@ -103,6 +111,7 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			newReq.Header.Set("Content-Type", "text/plain")
 			if err != nil {
 				common.TDEILogger.Error("Error creating the api key request with auth service", err)
+				fmt.Println("Error creating the api key request with auth service", err)
 				http.Error(w, "Error creating the api key request with auth service", http.StatusInternalServerError)
 				return
 			}
@@ -114,19 +123,23 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			res, err := client.Do(newReq)
 			if err != nil {
 				common.TDEILogger.Error("Error validating the api key request with auth service", err)
+				fmt.Println("Error validating the api key request with auth service", err)
 				http.Error(w, "Error validating the api key request with auth service", http.StatusInternalServerError)
 				return
 			} else if res.StatusCode != http.StatusOK {
 				common.TDEILogger.Error("Unauthorized request", res)
+				fmt.Println("Unauthorized request", res)
 				http.Error(w, "Unauthorized request", http.StatusForbidden)
 				return
 			}
 
+			fmt.Println("Authentication successful")
 			h.ServeHTTP(w, req)
 			return
 
 		} else {
 			common.TDEILogger.Debug("Error Authorizing")
+			fmt.Println("Error Authorizing")
 			common.TDEILogger.Error("[Unauthorized Access] API key / Access token not provided.")
 			http.Error(w, "Unauthorized request", http.StatusForbidden)
 			return
@@ -149,5 +162,3 @@ func extractBearerToken(rawToken string) (string, error) {
 }
 
 func main() {}
-
-
