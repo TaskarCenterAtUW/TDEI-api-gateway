@@ -2,33 +2,24 @@
     "endpoints": [
         {
             "endpoint": "/api/v1/refresh-token",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/refreshToken",
             "http_method": "POST",
             "backend_host": "https://tdei-auth-n-z-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/authenticate",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/authenticate",
             "http_method": "POST",
             "backend_host": "https://tdei-auth-n-z-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/status",
-            "input_query_strings": [
-                "tdeiRecordId"
-            ],
             "backend_url_pattern": "/api/v1/status",
             "http_method": "GET",
             "backend_host": "https://tdei-logger-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/organizations",
-            "input_query_strings": [
-                "page_no",
-                "page_size"
-            ],
             "backend_url_pattern": "/api/v1/organization",
             "http_method": "GET",
             "backend_host": "https://tdei-usermanagement-ts-dev.azurewebsites.net"
@@ -50,124 +41,84 @@
         },
         {
             "endpoint": "/api/v1/osw/{tdei_record_id}",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/osw/{tdei_record_id}",
             "http_method": "GET",
             "backend_host": "https://tdei-template-osw-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/osw/versions",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/osw/versions",
             "http_method": "GET",
             "backend_host": "https://tdei-template-osw-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/osw",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/osw",
             "http_method": "POST",
             "backend_host": "https://tdei-template-osw-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-pathways",
-            "input_query_strings": [
-                "tdei_station_id",
-                "bbox",
-                "pathways_schema_version",
-                "tdei_org_id",
-                "date_time",
-                "tdei_record_id",
-                "page_no",
-                "page_size"
-            ],
             "backend_url_pattern": "/api/v1/gtfs-pathways",
             "http_method": "GET",
             "backend_host": "https://tdei-template-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-pathways/versions",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/gtfs-pathways/versions",
             "http_method": "GET",
             "backend_host": "https://tdei-template-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-pathways/stations",
-            "input_query_strings": [
-                "tdei_org_id",
-                "page_no",
-                "page_size"
-            ],
             "backend_url_pattern": "/api/v1/gtfs-pathways/stations",
             "http_method": "GET",
             "backend_host": "https://tdei-template-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-pathways/{tdei_record_id}",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/gtfs-pathways/{tdei_record_id}",
             "http_method": "GET",
             "backend_host": "https://tdei-template-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-pathways",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/gtfs-pathways",
             "http_method": "POST",
             "backend_host": "https://tdei-template-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-flex",
-            "input_query_strings": [
-                "tdei_service_id",
-                "bbox",
-                "flex_schema_version",
-                "tdei_org_id",
-                "date_time",
-                "tdei_record_id",
-                "page_no",
-                "page_size"
-            ],
             "backend_url_pattern": "/api/v1/gtfs-flex",
             "http_method": "GET",
             "backend_host": "https://tdei-template-flex-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-flex/{tdei_record_id}",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/gtfs-flex/{tdei_record_id}",
             "http_method": "GET",
             "backend_host": "https://tdei-template-flex-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-flex/versions",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/gtfs-flex/versions",
             "http_method": "GET",
             "backend_host": "https://tdei-template-flex-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-flex/services",
-            "input_query_strings": [
-                "tdei_org_id",
-                "page_no",
-                "page_size"
-            ],
             "backend_url_pattern": "/api/v1/gtfs-flex/services",
             "http_method": "GET",
             "backend_host": "https://tdei-template-flex-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-flex",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/gtfs-flex",
             "http_method": "POST",
             "backend_host": "https://tdei-template-flex-datasvc-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/api",
-            "input_query_strings": [],
             "backend_url_pattern": "/api/v1/api",
             "http_method": "GET",
             "backend_host": "https://tdei-api-gateway-dev.azurewebsites.net"
