@@ -36,9 +36,9 @@ func (registerer) RegisterLogger(v interface{}) {
 	common.TDEILogger.Debug(fmt.Sprintf("[PLUGIN: %s] Logger loaded", HandlerRegisterer))
 }
 
-func stringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
+func pathContains(a string, list []string) bool {
+	for _, subStringUrl := range list {
+		if strings.Contains(a, subStringUrl) {
 			return true
 		}
 	}
@@ -69,7 +69,7 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 		common.TDEILogger.Debug("Entered HTTP handler")
 		fmt.Println("Entered HTTP handler")
 
-		if stringInSlice(req.URL.Path, passThroughUrls) {
+		if pathContains(req.URL.Path, passThroughUrls) {
 			h.ServeHTTP(w, req)
 			return
 		}

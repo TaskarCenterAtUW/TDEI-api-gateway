@@ -13,6 +13,7 @@
         "endpoint": "{{ $endpoint.endpoint }}",
         "method": "{{ $endpoint.http_method }}",
         "output_encoding": "no-op",
+        "input_query_strings": {{ $endpoint.input_query_strings }},
         "input_headers": [
         "*"
         ],
