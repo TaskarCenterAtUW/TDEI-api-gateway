@@ -26,15 +26,6 @@
         },
         {
             "endpoint": "/api/v1/osw",
-            "input_query_strings": [
-                "bbox",
-                "osw_schema_version",
-                "tdei_org_id",
-                "date_time",
-                "tdei_record_id",
-                "page_no",
-                "page_size"
-            ],
             "backend_url_pattern": "/api/v1/osw",
             "http_method": "GET",
             "backend_host": "https://tdei-template-osw-datasvc-ts-dev.azurewebsites.net"
@@ -71,9 +62,9 @@
         },
         {
             "endpoint": "/api/v1/gtfs-pathways/stations",
-            "backend_url_pattern": "/api/v1/gtfspathways/stations",
+            "backend_url_pattern": "/api/v1/station",
             "http_method": "GET",
-            "backend_host": "https://tdei-template-datasvc-ts-dev.azurewebsites.net"
+            "backend_host": "https://tdei-usermanagement-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-pathways/{tdei_record_id}",
@@ -107,9 +98,9 @@
         },
         {
             "endpoint": "/api/v1/gtfs-flex/services",
-            "backend_url_pattern": "/api/v1/gtfsflex/services",
+            "backend_url_pattern": "/api/v1/service",
             "http_method": "GET",
-            "backend_host": "https://tdei-template-flex-datasvc-ts-dev.azurewebsites.net"
+            "backend_host": "https://tdei-usermanagement-ts-dev.azurewebsites.net"
         },
         {
             "endpoint": "/api/v1/gtfs-flex",
