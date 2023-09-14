@@ -157,7 +157,7 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			common.TDEILogger.Debug("Error Authorizing")
 			fmt.Println("Error Authorizing")
 			common.TDEILogger.Error("[Unauthorized Access] API key / Access token not provided.")
-			http.Error(w, "Unauthorized request", http.StatusForbidden)
+			http.Error(w, "Unauthorized request", http.StatusUnauthorized)
 			return
 		}
 
