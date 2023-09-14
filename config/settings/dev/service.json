@@ -22,7 +22,20 @@
         "security/cors": {
             "allow_origins": [
                 "*"
-            ]
+            ],
+            "allow_methods": [
+                "GET",
+                "HEAD",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "OPTIONS"
+            ],
+            "debug": true
+        },
+        "router": {
+            "auto_options": true
         }
     }
 }
