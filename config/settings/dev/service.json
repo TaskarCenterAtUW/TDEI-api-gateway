@@ -18,6 +18,11 @@
                 "auth_server": "https://tdei-auth-n-z-dev.azurewebsites.net",
                 "pass-through-urls": "refresh-token,authenticate"
             }
+        },
+        "security/cors": {
+            "allow_origins": [
+                "*"
+            ]
         }
     }
 }
