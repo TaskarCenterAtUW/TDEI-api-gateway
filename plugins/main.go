@@ -79,7 +79,7 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			if err != nil {
 				common.TDEILogger.Error("Invalid access token format", err)
 				fmt.Println("Invalid access token format", err)
-				http.Error(w, "Invalid access token format", http.StatusForbidden)
+				http.Error(w, "Invalid access token format", http.StatusUnauthorized)
 				return
 			}
 
@@ -110,7 +110,7 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			} else if res.StatusCode != http.StatusOK {
 				common.TDEILogger.Error("Unauthorized request", res)
 				fmt.Println("Unauthorized request", res)
-				http.Error(w, "Unauthorized request", http.StatusForbidden)
+				http.Error(w, "Unauthorized request", http.StatusUnauthorized)
 				return
 			}
 
@@ -145,7 +145,7 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			} else if res.StatusCode != http.StatusOK {
 				common.TDEILogger.Error("Unauthorized request", res)
 				fmt.Println("Unauthorized request", res)
-				http.Error(w, "Unauthorized request", http.StatusForbidden)
+				http.Error(w, "Unauthorized request", http.StatusUnauthorized)
 				return
 			}
 
