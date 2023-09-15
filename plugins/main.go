@@ -4,6 +4,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -45,6 +46,15 @@ func pathContains(a string, list []string) bool {
 	return false
 }
 
+type Versions struct {
+	Versions []Version `json:"versions"`
+}
+type Version struct {
+	Version       string `json:"version"`
+	Documentation string `json:"documentation"`
+	Specification string `json:"specification"`
+}
+
 func (r registerer) registerHandlers(_ context.Context, extra map[string]interface{}, h http.Handler) (http.Handler, error) {
 	// //The config variable contains all the keys you have defined in the configuration
 	// if the key doesn't exists or is not a map the plugin returns an error and the default handler
@@ -56,6 +66,8 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 	// The plugin will look for this path:
 	apiKeyHeader, _ := config["api_key_header"].(string)
 	authServer, _ := config["auth_server"].(string)
+	apiDcoumentationUrl, _ := config["tdei-api-documentation-url"].(string)
+	apiSpecificationUrl, _ := config["tdei-api-specification-url"].(string)
 	passThroughUrlsConfig, _ := config["pass-through-urls"].(string)
 	passThroughUrls := strings.Split(passThroughUrlsConfig, ",")
 	common.TDEILogger.Debug(fmt.Sprintf("TDEI plugin is now configured with HTTP middleware %s", apiKeyHeader))
@@ -69,8 +81,36 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 		common.TDEILogger.Debug("Entered HTTP handler")
 		fmt.Println("Entered HTTP handler")
 
+		//Pass through url check
 		if pathContains(req.URL.Path, passThroughUrls) {
 			h.ServeHTTP(w, req)
+			return
+		}
+
+		//Serve /api from Gateway as it is static implementation now
+		if strings.Contains(req.URL.Path, "/api/v1/api") == true {
+			w.Header().Set("Content-Type", "application/json")
+
+			version := Version{
+				Version:       "1.0",
+				Documentation: apiDcoumentationUrl,
+				Specification: apiSpecificationUrl,
+			}
+
+			versions := Versions{
+				Versions: []Version{version},
+			}
+
+			// Convert the Versions object to JSON
+			jsonData, err := json.Marshal(versions)
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+
+			// Set the HTTP status code to 200
+			w.WriteHeader(http.StatusOK)
+			w.Write(jsonData)
 			return
 		}
 
