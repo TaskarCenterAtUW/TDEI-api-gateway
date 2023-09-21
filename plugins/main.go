@@ -66,8 +66,6 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 	// The plugin will look for this path:
 	apiKeyHeader, _ := config["api_key_header"].(string)
 	authServer, _ := config["auth_server"].(string)
-	apiDcoumentationUrl, _ := config["tdei-api-documentation-url"].(string)
-	apiSpecificationUrl, _ := config["tdei-api-specification-url"].(string)
 	passThroughUrlsConfig, _ := config["pass-through-urls"].(string)
 	passThroughUrls := strings.Split(passThroughUrlsConfig, ",")
 	common.TDEILogger.Debug(fmt.Sprintf("TDEI plugin is now configured with HTTP middleware %s", apiKeyHeader))
@@ -84,33 +82,6 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 		//Pass through url check
 		if pathContains(req.URL.Path, passThroughUrls) {
 			h.ServeHTTP(w, req)
-			return
-		}
-
-		//Serve /api from Gateway as it is static implementation now
-		if strings.Contains(req.URL.Path, "/api/v1/api") == true {
-			w.Header().Set("Content-Type", "application/json")
-
-			version := Version{
-				Version:       "1.0",
-				Documentation: apiDcoumentationUrl,
-				Specification: apiSpecificationUrl,
-			}
-
-			versions := Versions{
-				Versions: []Version{version},
-			}
-
-			// Convert the Versions object to JSON
-			jsonData, err := json.Marshal(versions)
-			if err != nil {
-				fmt.Println("Error:", err)
-				return
-			}
-
-			// Set the HTTP status code to 200
-			w.WriteHeader(http.StatusOK)
-			w.Write(jsonData)
 			return
 		}
 
@@ -155,7 +126,15 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			}
 
 			fmt.Println("Authentication successful")
-			h.ServeHTTP(w, req)
+			executedApi, error := processGatewayAPIRequests(config, w, req)
+			if error != nil {
+				common.TDEILogger.Error("Error processing the api request", err)
+				fmt.Println("Error processing the api request", err)
+				http.Error(w, "Error processing the api request", http.StatusInternalServerError)
+				return
+			} else if !executedApi {
+				h.ServeHTTP(w, req)
+			}
 			return
 		} else if len(apiKey) != 0 {
 			common.TDEILogger.Debug("Validating API Key")
@@ -190,7 +169,16 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			}
 
 			fmt.Println("Authentication successful")
-			h.ServeHTTP(w, req)
+
+			executedApi, error := processGatewayAPIRequests(config, w, req)
+			if error != nil {
+				common.TDEILogger.Error("Error processing the api request", err)
+				fmt.Println("Error processing the api request", err)
+				http.Error(w, "Error processing the api request", http.StatusInternalServerError)
+				return
+			} else if !executedApi {
+				h.ServeHTTP(w, req)
+			}
 			return
 
 		} else {
@@ -202,6 +190,38 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 		}
 
 	}), nil
+}
+
+func processGatewayAPIRequests(config map[string]interface{}, w http.ResponseWriter, req *http.Request) (bool, error) {
+	apiDcoumentationUrl, _ := config["tdei-api-documentation-url"].(string)
+	apiSpecificationUrl, _ := config["tdei-api-specification-url"].(string)
+	// Serve /api from Gateway as it is static implementation now
+	if strings.Contains(req.URL.Path, "/api/v1/api") == true {
+		w.Header().Set("Content-Type", "application/json")
+
+		version := Version{
+			Version:       "1.0",
+			Documentation: apiDcoumentationUrl,
+			Specification: apiSpecificationUrl,
+		}
+
+		versions := Versions{
+			Versions: []Version{version},
+		}
+
+		// Convert the Versions object to JSON
+		jsonData, err := json.Marshal(versions)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return false, err
+		}
+
+		// Set the HTTP status code to 200
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonData)
+		return true, nil
+	}
+	return false, nil
 }
 
 // bearerToken extracts the content from the header, striping the Bearer prefix
