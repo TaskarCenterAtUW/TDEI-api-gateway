@@ -13,6 +13,55 @@ import (
 	"time"
 )
 
+var helpHTML = `<html>
+<head>
+<style type=text/css>
+*{
+    transition: all 0.6s;
+}
+
+html {
+    height: 100%;
+}
+
+body{
+    font-family: 'Lato', sans-serif;
+    color: #888;
+    margin: 0;
+}
+
+#main{
+    display: table;
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+}
+
+.fof{
+	  display: table-cell;
+	  vertical-align: middle;
+}
+
+.fof h1{
+	  font-size: 50px;
+	  display: inline-block;
+	  padding-right: 12px;
+}
+</style>
+</head>
+
+<body>
+<div id="main">
+    	<div class="fof">
+        		<h1>Unauthorized access</h1>
+        <p>For API documentation please refer <a href="apidoc">TDEI API DOC</a>
+        </p>
+    	</div>
+</div>
+
+</body>
+</html>`
+
 // pluginName is the plugin name
 var pluginName = "tdei-api-gateway"
 
@@ -75,13 +124,13 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 
 		authorizationToken := req.Header.Get("Authorization")
 		apiKey := req.Header.Get(apiKeyHeader)
+		apiDcoumentationUrl, _ := config["tdei-api-documentation-url"].(string)
 
 		common.TDEILogger.Debug("Entered HTTP handler")
 		fmt.Println("Entered HTTP handler")
 
 		//api documentation redirect
 		if strings.Contains(req.URL.Path, "/api/docs") == true {
-			apiDcoumentationUrl, _ := config["tdei-api-documentation-url"].(string)
 			http.Redirect(w, req, apiDcoumentationUrl, http.StatusPermanentRedirect)
 			return
 		}
@@ -192,7 +241,11 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 			common.TDEILogger.Debug("Error Authorizing")
 			fmt.Println("Error Authorizing")
 			common.TDEILogger.Error("[Unauthorized Access] API key / Access token not provided.")
-			http.Error(w, "Unauthorized request", http.StatusUnauthorized)
+			//http.Error(w, "Unauthorized request", http.StatusUnauthorized)
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			w.WriteHeader(http.StatusUnauthorized)
+			htmlContent := strings.Replace(helpHTML, "apidoc", apiDcoumentationUrl, 1)
+			fmt.Fprint(w, htmlContent)
 			return
 		}
 
