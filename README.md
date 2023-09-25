@@ -26,5 +26,5 @@ docker build --build-arg ENV=prod -t tdei-api-krakend:v1 .
 
 ## Deploying
 
-docker run -p 8080:8080 tdei-krakend:v1 run -d -c krakend.json
+docker run -p 8080:8080 tdei-api-krakend:v1 run -d -c krakend.json
 
