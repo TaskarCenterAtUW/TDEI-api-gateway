@@ -79,6 +79,13 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 		common.TDEILogger.Debug("Entered HTTP handler")
 		fmt.Println("Entered HTTP handler")
 
+		//api documentation redirect
+		if strings.Contains(req.URL.Path, "/api/docs") == true {
+			apiDcoumentationUrl, _ := config["tdei-api-documentation-url"].(string)
+			http.Redirect(w, req, apiDcoumentationUrl, http.StatusPermanentRedirect)
+			return
+		}
+
 		//Pass through url check
 		if pathContains(req.URL.Path, passThroughUrls) {
 			h.ServeHTTP(w, req)
