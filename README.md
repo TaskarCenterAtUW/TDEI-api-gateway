@@ -3,8 +3,11 @@ The TDEI API Gateway is the primary entry point to the TDEI system. It plays a p
 
 ## System Requirement
 Linux Latest LTS ( >= Ubuntu 22.04)
+
 golang 1.20.6
+
 krakenD 2.4.3
+
 Docker
 
 
