@@ -156,7 +156,7 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 
 		} else {
 			message := "[Unauthorized Access] API key / Access token not provided"
-			logError(w, message, http.StatusInternalServerError, errors.New(message))
+			logError(nil, message, http.StatusInternalServerError, errors.New(message))
 
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
 			w.WriteHeader(http.StatusUnauthorized)
@@ -171,7 +171,9 @@ func (r registerer) registerHandlers(_ context.Context, extra map[string]interfa
 func logError(w http.ResponseWriter, message string, status int, err error) {
 	common.TDEILogger.Error(message, err)
 	fmt.Println(message, err)
-	http.Error(w, message, status)
+	if w != nil {
+		http.Error(w, message, status)
+	}
 }
 
 func processGatewayAPIRequests(pluginConfig tdeitypes.PluginConfig, w http.ResponseWriter, req *http.Request) (bool, error) {
